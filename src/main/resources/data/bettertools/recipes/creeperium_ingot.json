@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "bettertools:creeperium_block"
+    }
+  ],
+  "result": {
+    "item": "bettertools:creeperium_ingot",
+    "count": 9
+  }
+}
