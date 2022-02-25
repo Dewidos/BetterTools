@@ -1,9 +1,7 @@
 package me.dewidos.bettertools.items;
 
 import me.dewidos.bettertools.BetterTools;
-import me.dewidos.bettertools.items.tools.CreeperiumAxe;
-import me.dewidos.bettertools.items.tools.CreeperiumPickaxe;
-import me.dewidos.bettertools.items.tools.CreeperiumSword;
+import me.dewidos.bettertools.items.tools.*;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,7 +15,7 @@ public class ModItems {
     public static final RegistryObject<Item> CREEPERIUM_SWORD = ITEMS.register("creeperium_sword", () -> new CreeperiumSword(ModTiers.CREEPERIUM, 2, -0.2f, new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
     public static final RegistryObject<Item> CREEPERIUM_PICKAXE = ITEMS.register("creeperium_pickaxe", () -> new CreeperiumPickaxe(ModTiers.CREEPERIUM, 1, 1f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
     public static final RegistryObject<Item> CREEPERIUM_SHOVEL = ITEMS.register("creeperium_shovel", () -> new
-            ShovelItem(ModTiers.CREEPERIUM, 0, 1f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
+            CreeperiumShovel(ModTiers.CREEPERIUM, 0, 1f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
     public static final RegistryObject<Item> CREEPERIUM_AXE = ITEMS.register("creeperium_axe", () -> new CreeperiumAxe(ModTiers.CREEPERIUM, 4, 0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
-    public static final RegistryObject<Item> CREEPERIUM_HOE = ITEMS.register("creeperium_hoe", () -> new HoeItem(ModTiers.CREEPERIUM, 0, 0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
+    public static final RegistryObject<Item> CREEPERIUM_HOE = ITEMS.register("creeperium_hoe", () -> new CreeperiumHoe(ModTiers.CREEPERIUM, 0, 0f, new Item.Properties().tab(CreativeModeTab.TAB_TOOLS)));
 }
