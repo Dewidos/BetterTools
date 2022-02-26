@@ -38,7 +38,7 @@ public class CreeperiumAxe extends AxeItem {
                 else break;
             }
 
-            pLevel.playSound(null, pPos.getX(), pPos.getY(), pPos.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4.0F, (1.0F + (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.2F) * 0.7F);
+            pLevel.playSound(null, pPos.getX(), pPos.getY(), pPos.getZ(), SoundEvents.GENERIC_EXPLODE, pEntityLiving.getSoundSource(), 3.0F, (1.0F + (pLevel.random.nextFloat() - pLevel.random.nextFloat()) * 0.2F) * 0.7F);
 
             return true;
         }

@@ -70,7 +70,7 @@ public class CreeperiumHoe extends HoeItem {
 
         if (blockDataList.size() > 0) {
             if (!level.isClientSide) {
-                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 2.0F, (1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.2F) * 0.7F);
+                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, player.getSoundSource(), 2.0F, (1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.2F) * 0.7F);
 
                 for (BlockData blockData : blockDataList) {
                     if (level.getBlockState(blockData.getBlockPos().above()).isAir())
