@@ -4,6 +4,8 @@ import me.dewidos.bettertools.util.BlockData;
 import me.dewidos.bettertools.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.Tag;
@@ -27,6 +29,8 @@ import java.util.Objects;
 import static me.dewidos.bettertools.items.tools.CreeperiumAxe.addBlockToList;
 
 public class CreeperiumHoe extends HoeItem {
+    private boolean usingSpecialAbility = false;
+
     public CreeperiumHoe(Tier pTier, int pAttackDamageModifier, float pAttackSpeedModifier, Properties pProperties) {
         super(pTier, pAttackDamageModifier, pAttackSpeedModifier, pProperties);
     }
@@ -34,32 +38,52 @@ public class CreeperiumHoe extends HoeItem {
     @Override
     public @NotNull InteractionResult useOn(UseOnContext pContext) {
         Level level = pContext.getLevel();
-        if (!level.isClientSide) {
-            if (level.random.nextFloat() < 0.3f && pContext.getClickedFace() != Direction.DOWN) {
-                BlockPos blockPos = pContext.getClickedPos();
-                Player player = Objects.requireNonNull(pContext.getPlayer());
-                InteractionHand interactionHand = pContext.getHand();
-                ItemStack itemStack = pContext.getItemInHand();
 
-                int radius = 3;
+        if (pContext.getClickedFace() == Direction.DOWN) return super.useOn(pContext);
 
-                BoundingBox boundingBox = new BoundingBox(blockPos.getX() - radius, blockPos.getY(), blockPos.getZ() - radius, blockPos.getX() + radius, blockPos.getY(), blockPos.getZ() + radius);
-                List<BlockData> blockDataList = new ArrayList<>();
-
-                touchingBlocks(level, blockPos, ModTags.Blocks.TILLABLE, blockDataList, boundingBox, true);
-
-                if (blockDataList.size() > 0) {
-                    level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 2.0F, (1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.2F) * 0.7F);
-
-                    for (BlockData blockData : blockDataList) {
-                        if (level.getBlockState(blockData.getBlockPos().above()).isAir())
-                            tillBlock(player, level, blockData.getBlockPos(), itemStack, interactionHand);
-                    }
-                }
+        if (level.isClientSide) {
+            if (level.random.nextFloat() < 0.3f) {
+                usingSpecialAbility = true;
+                specialAbility(pContext, level);
             }
+        }
+        else if (usingSpecialAbility) {
+            specialAbility(pContext, level);
+            usingSpecialAbility = false;
         }
 
         return super.useOn(pContext);
+    }
+
+    private void specialAbility(UseOnContext pContext, Level level) {
+        BlockPos blockPos = pContext.getClickedPos();
+        Player player = Objects.requireNonNull(pContext.getPlayer());
+        InteractionHand interactionHand = pContext.getHand();
+        ItemStack itemStack = pContext.getItemInHand();
+
+        int radius = 3;
+
+        BoundingBox boundingBox = new BoundingBox(blockPos.getX() - radius, blockPos.getY(), blockPos.getZ() - radius, blockPos.getX() + radius, blockPos.getY(), blockPos.getZ() + radius);
+        List<BlockData> blockDataList = new ArrayList<>();
+
+        touchingBlocks(level, blockPos, ModTags.Blocks.TILLABLE, blockDataList, boundingBox, true);
+
+        if (blockDataList.size() > 0) {
+            if (!level.isClientSide) {
+                level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 2.0F, (1.0F + (level.random.nextFloat() - level.random.nextFloat()) * 0.2F) * 0.7F);
+
+                for (BlockData blockData : blockDataList) {
+                    if (level.getBlockState(blockData.getBlockPos().above()).isAir())
+                        tillBlock(player, level, blockData.getBlockPos(), itemStack, interactionHand);
+                }
+            }
+            else {
+                for (BlockData blockData : blockDataList) {
+                    BlockPos blockPos1 = blockData.getBlockPos();
+                    level.addParticle(ParticleTypes.HAPPY_VILLAGER, blockPos1.getX(), blockPos1.getY(), blockPos1.getZ(), 0d, 6d, 0d);
+                }
+            }
+        }
     }
 
     private void tillBlock(Player player, Level level, BlockPos blockPos, ItemStack itemStack, InteractionHand hand) {
